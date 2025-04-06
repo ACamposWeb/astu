@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutores</title>
+</head>
+<body>
+    <h1>Lista de Tutores</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Especialidad</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            
+            <!-- Iteración sobre la lista de tutores -->
+            <tr th:each="tutor : ${tutores}">
+                <td th:text="${tutor.name}">Nombre</td>
+                <td th:text="${tutor.especialidad}">Email</td>
+                
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

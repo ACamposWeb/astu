@@ -1,31 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estudiantes - Vista JSON</title>
+    <title>Estudiantes</title>
 </head>
 <body>
-    <h1>Lista de Estudiantes en formato JSON</h1>
-
-    <div>
-        <p>Este es el objeto Estudiante en formato JSON:</p>
-
-        <pre>
-            [
-            <th:block th:each="estudiante, iterStat : ${estudiantes}">
-                {
-                    "id": <span th:text="${estudiante.id}"></span>, 
-                    "name": "<span th:text="${estudiante.name}"></span>", 
-                    "email": "<span th:text="${estudiante.email}"></span>", 
-                    "program": "<span th:text="${estudiante.program}"></span>"
-                }
-                <span th:if="${not iterStat.last}" th:text=","></span>
-            </th:block>
-            ]
-        </pre>
-    </div>
-
+    <h1>Lista de Estudiantes</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Programa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Iteración sobre la lista de estudiantes -->
+            <tr th:each="estudiante : ${estudiantes}">
+                <td th:text="${estudiante.name}">Nombre</td>
+                <td th:text="${estudiante.email}">Email</td>
+                <td th:text="${estudiante.program}">Programa</td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
+
