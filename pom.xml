@@ -67,7 +67,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.g9.astu.astu.HomeController</mainClass>
+					<mainClass>com.g9.astu.AstuApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
