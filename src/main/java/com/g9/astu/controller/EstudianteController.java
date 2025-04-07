@@ -33,7 +33,6 @@ public class EstudianteController {
         return "redirect:/estudiantes";
     }
 
-    // Nuevo: Mostrar formulario de edición
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEdicion(@PathVariable Long id, Model model) {
         Estudiante estudiante = service.getById(id)
@@ -43,7 +42,7 @@ public class EstudianteController {
         return "estudiantes"; // Misma vista pero con el objeto cargado
     }
 
-    // Nuevo: Eliminar estudiante
+    //Eliminar estudiante
     @GetMapping("/eliminar/{id}")
     public String eliminarEstudiante(@PathVariable Long id) {
         service.delete(id);
