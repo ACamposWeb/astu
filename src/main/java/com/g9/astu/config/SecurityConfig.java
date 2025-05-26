@@ -27,7 +27,7 @@ public class SecurityConfig {
             .anyRequest().authenticated()
         )
         .oauth2Login(oauth2 -> oauth2
-            .loginPage("/login") // o deja el login por defecto
+            .loginPage("/oauth2/authorization/auth0") // o deja el login por defecto
         )
         .logout(logout -> logout
             .logoutSuccessUrl("/login?logout")
