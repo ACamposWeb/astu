@@ -30,7 +30,13 @@ public class SecurityConfig {
             .loginPage("/oauth2/authorization/auth0") // o deja el login por defecto
         )
         .logout(logout -> logout
-            .logoutSuccessUrl("/login?logout")
+            .logoutSuccessHandler((request, response, authentication) -> {
+                String logoutUrl = "https://dev-8te40hkg76bhv6bx.us.auth0.com/v2/logout" +
+                    "?client_id=S91eM31vXFkLJCtgbAE5hUzwOvCTAlZL" +
+                    "&returnTo=https://astu.onrender.com";
+
+                response.sendRedirect(logoutUrl);
+            })
             .invalidateHttpSession(true)
             .clearAuthentication(true)
             .deleteCookies("JSESSIONID")
