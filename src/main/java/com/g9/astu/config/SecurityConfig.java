@@ -19,31 +19,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para APIs REST
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    new AntPathRequestMatcher("/"),
-                    new AntPathRequestMatcher("/login"),
-                    new AntPathRequestMatcher("/css/**"),
-                    new AntPathRequestMatcher("/js/**"),
-                    new AntPathRequestMatcher("/error")
-                ).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("admin")
-                .requestMatchers(new AntPathRequestMatcher("/user/**")).hasRole("user")
-                .anyRequest().authenticated()
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt
-                    .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                )
-            )
-            .logout(logout -> logout
-                .logoutSuccessUrl("/login?logout")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll()
-            );
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/", "/login", "/css/**", "/js/**").permitAll()
+            .requestMatchers("/admin/**").hasRole("admin")
+            .requestMatchers("/user/**").hasRole("user")
+            .anyRequest().authenticated()
+        )
+        .oauth2Login(oauth2 -> oauth2
+            .loginPage("/login") // o deja el login por defecto
+        )
+        .logout(logout -> logout
+            .logoutSuccessUrl("/login?logout")
+            .invalidateHttpSession(true)
+            .clearAuthentication(true)
+            .deleteCookies("JSESSIONID")
+            .permitAll()
+        );
+
 
         return http.build();
     }
