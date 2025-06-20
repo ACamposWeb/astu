@@ -3,14 +3,22 @@ package com.g9.astu.controller;
 import com.g9.astu.model.*;
 import com.g9.astu.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
+
+//import java.util.List;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-//import java.util.List;
+
 
 @Controller
 @RequestMapping("/sesiones")
@@ -24,6 +32,9 @@ public class SesionController {
     
     @Autowired
     private TutorService tutorService;
+
+    @Autowired
+private SesionExportService sesionExportService;
 
     @GetMapping
     public String listarSesiones(Model model) {
@@ -79,4 +90,22 @@ public class SesionController {
         redirectAttributes.addFlashAttribute("tipoMensaje", "success");
         return "redirect:/sesiones";
     }
+   @GetMapping("/export")
+public ResponseEntity<byte[]> exportarExcel(
+        @RequestParam(required = false) Long estudianteId) throws IOException {
+
+    ByteArrayInputStream in = sesionExportService.generarExcel(estudianteId);
+
+    String filename = "sesiones_" + LocalDate.now() + ".xlsx";
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.parseMediaType(
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+    headers.setContentDisposition(
+            ContentDisposition.attachment().filename(filename).build());
+
+    return ResponseEntity.ok()
+            .headers(headers)
+            .body(in.readAllBytes());
+}
 }

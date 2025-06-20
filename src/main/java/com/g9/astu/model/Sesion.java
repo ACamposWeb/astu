@@ -10,6 +10,9 @@ public class Sesion {
     private Long id;
     private LocalDate fecha;
     private LocalTime hora;
+    private String observaciones;
+    private String asistencia;
+
 
     @ManyToOne
     private Estudiante estudiante;
@@ -66,5 +69,19 @@ public class Sesion {
     public void setTutor(Tutor tutor) {
         this.tutor = tutor;
     }
-    
+    public String getObservaciones() {
+    return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+    this.observaciones = observaciones;
+    }
+
+    public String getAsistencia() {
+    return asistencia;
+    }
+
+    public void setAsistencia(String asistencia) {
+    this.asistencia = asistencia;
+    }   
 }
