@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Sesiones</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Historial de Tutorías</h1>
+
+    <form method="get" th:action="@{/sesiones/historial}" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label class="form-label">Estudiante</label>
+            <select name="estudianteId" class="form-select">
+                <option value="">Todos</option>
+                <option th:each="e : ${estudiantes}" th:value="${e.id}" th:text="${e.name}"></option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Tutor</label>
+            <select name="tutorId" class="form-select">
+                <option value="">Todos</option>
+                <option th:each="t : ${tutores}" th:value="${t.id}" th:text="${t.name}"></option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Desde</label>
+            <input type="date" name="fechaInicio" class="form-control"/>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Hasta</label>
+            <input type="date" name="fechaFin" class="form-control"/>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Estudiante</th>
+            <th>Tutor</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${sesiones}">
+            <td th:text="${s.fecha}"></td>
+            <td th:text="${s.hora}"></td>
+            <td th:text="${s.estudiante.name}"></td>
+            <td th:text="${s.tutor.name}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
