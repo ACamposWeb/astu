@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Lista de Actividades Académicas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+    <style>
+        .navbar-custom {
+            background-color: #343a40;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255,255,255,0.8);
+            transition: all 0.3s;
+            margin: 0 5px;
+            border-radius: 5px;
+        }
+        .navbar-custom .nav-link:hover {
+            color: white;
+            background-color: rgba(255,255,255,0.1);
+        }
+        .navbar-custom .nav-link.active {
+            color: white;
+            font-weight: 500;
+        }
+        .title-bar {
+            background-color: #f8f9fa;
+            padding: 1rem 0;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="bi bi-house-door"></i> Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/estudiantes"><i class="bi bi-people"></i> Estudiantes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tutores"><i class="bi bi-person-badge"></i> Tutores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sesiones"><i class="bi bi-calendar-event"></i> Sesiones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/actividades"><i class="bi bi-journal-text"></i> Actividades</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>Lista de Actividades Académicas</h1>
+        <!-- Botón para mostrar formulario -->
+        <button id="btnMostrarFormulario" class="btn btn-primary mb-3">
+            <i class="bi bi-plus-circle"></i> Nueva Actividad
+        </button>
+        <!-- Formulario -->
+        <div id="formularioActividad" class="card mb-4 d-none">
+            <div class="card-header">
+                <h5>Agregar Nueva Actividad</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/actividades/guardar}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="sesionId" class="form-label">Sesión:</label>
+                        <select id="sesionId" name="sesionId" class="form-select" required>
+                            <option value="" disabled selected>Seleccione una sesión</option>
+                            <th:block th:each="sesion : ${sesiones}">
+
+                                <option th:value="${sesion.id}"
+                                        th:text="${sesion.fecha} + ' - ' + ${sesion.horaFormateada} + ' - ' + ${sesion.estudiante.name} + ' / ' + ${sesion.tutor.name}">
+                                </option>
+                            </th:block>
+
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción de la actividad:</label>
+                        <textarea id="descripcion" name="descripcion" rows="5" class="form-control" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="archivo" class="form-label">Adjuntar evidencia (archivo):</label>
+                        <input type="file" id="archivo" name="archivo" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                    </div>
+
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="bi bi-save"></i> Registrar Actividad
+                    </button>
+                    <button type="button" id="btnCancelar" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+
+
+        <div class="card">
+            <div class="card-header">
+                <h5>Actividades Registradas</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Sesión (Estudiante / Tutor)</th>
+                            <th>Descripción</th>
+                            <th>Evidencia</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="actividad, iterStat : ${actividades}">
+                            <td th:text="${iterStat.index + 1}"></td>
+                            <td th:text="${actividad.sesion.fechaFormateada}"></td>
+                            <td th:text="${actividad.sesion.horaFormateada}"></td>
+                            <td>
+                                <span th:text="${actividad.sesion.estudiante.name}"></span> /
+                                <span th:text="${actividad.sesion.tutor.name}"></span>
+                            </td>
+                            <td th:text="${actividad.descripcion}"></td>
+                            <td>
+                                <th:block th:if="${actividad.archivoUrl != null}">
+                                    <a th:href="@{'/uploads/' + ${actividad.archivoUrl}}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-paperclip"></i> Ver
+                                    </a>
+                                </th:block>
+                                <th:block th:if="${actividad.archivoUrl == null}">
+                                    <span class="text-muted">No hay evidencia</span>
+                                </th:block>
+                            </td>
+                            <td><a th:href="@{'/actividades/eliminar/' + ${actividad.id}}" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('¿Seguro que quieres eliminar esta actividad?')">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(actividades)}">
+                            <td colspan="6" class="text-center">No hay actividades registradas.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnMostrar = document.getElementById('btnMostrarFormulario');
+            const btnCancelar = document.getElementById('btnCancelar');
+            const formulario = document.getElementById('formularioActividad');
+
+            btnMostrar.addEventListener('click', function () {
+                formulario.classList.remove('d-none');
+                btnMostrar.classList.add('d-none');
+            });
+
+            btnCancelar.addEventListener('click', function () {
+                formulario.classList.add('d-none');
+                btnMostrar.classList.remove('d-none');
+                formulario.querySelector('form').reset();
+            });
+        });
+    </script>
+</body>
+</html>

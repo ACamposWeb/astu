@@ -1,5 +1,7 @@
 package com.g9.astu.model;
 import jakarta.persistence.*;
+
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -66,5 +68,24 @@ public class Sesion {
     public void setTutor(Tutor tutor) {
         this.tutor = tutor;
     }
+
+    public String getFechaFormateada() {
+        if (fecha == null) return "Sin fecha";
+        return fecha.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+    public String getHoraFormateada() {
+        if (hora == null) return "Sin hora";
+        return hora.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
+    }
+
+    @Override
+    public String toString() {
+        String fechaStr = (fecha != null) ? new SimpleDateFormat("dd/MM/yyyy").format(fecha) : "Sin fecha";
+        String horaStr = (hora != null) ? hora.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")) : "Sin hora";
+        String estudianteStr = (estudiante != null) ? estudiante.getName() : "Sin estudiante";
+        String tutorStr = (tutor != null) ? tutor.getName() : "Sin tutor";
+        return fechaStr + " - " + horaStr + " - " + estudianteStr + " / " + tutorStr;
+    }
+
     
 }
