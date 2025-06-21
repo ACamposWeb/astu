@@ -83,7 +83,7 @@ public class SesionController {
         return "redirect:/sesiones";
     }
 
-    @GetMapping("/historial")
+@GetMapping("/historial")
 public String historialSesiones(
         @RequestParam(required = false) Long estudianteId,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
@@ -91,13 +91,17 @@ public String historialSesiones(
         @RequestParam(required = false) Long tutorId,
         Model model) {
 
-    model.addAttribute("estudiantes", estudianteService.getAll());
-    model.addAttribute("tutores", tutorService.getAll());
+    try {
+        model.addAttribute("estudiantes", estudianteService.getAll());
+        model.addAttribute("tutores", tutorService.getAll());
 
-    List<Sesion> sesiones = sesionService.buscarHistorial(estudianteId, fechaInicio, fechaFin, tutorId);
-    model.addAttribute("sesiones", sesiones);
+        List<Sesion> sesiones = sesionService.buscarHistorial(estudianteId, fechaInicio, fechaFin, tutorId);
+        model.addAttribute("sesiones", sesiones);
 
-    return "historial-sesiones";
+        return "historial-sesiones";
+    } catch (Exception e) {
+        model.addAttribute("error", "Error al buscar historial: " + e.getMessage());
+        return "error"; // o alguna vista para mostrar errores
+    }
 }
-
 }
