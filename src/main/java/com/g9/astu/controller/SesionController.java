@@ -3,6 +3,7 @@ package com.g9.astu.controller;
 import com.g9.astu.model.*;
 import com.g9.astu.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-//import java.util.List;
+import java.util.List;
 
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.ResponseEntity;
@@ -108,5 +109,26 @@ public class SesionController {
         return ResponseEntity.ok()
             .headers(headers)
             .body(in.readAllBytes());
+    }
+    @GetMapping("/historial")
+    public String historialSesiones(
+            @RequestParam(required = false) Long estudianteId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            @RequestParam(required = false) Long tutorId,
+            Model model) {
+
+        try {
+            model.addAttribute("estudiantes", estudianteService.getAll());
+            model.addAttribute("tutores", tutorService.getAll());
+
+            List<Sesion> sesiones = sesionService.buscarHistorial(estudianteId, fechaInicio, fechaFin, tutorId);
+            model.addAttribute("sesiones", sesiones);
+
+            return "historial-sesiones";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al buscar historial: " + e.getMessage());
+            return "error"; // o alguna vista para mostrar errores
+        }
     }
 }
