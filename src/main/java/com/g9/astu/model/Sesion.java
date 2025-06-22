@@ -1,7 +1,5 @@
 package com.g9.astu.model;
 import jakarta.persistence.*;
-
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -12,6 +10,8 @@ public class Sesion {
     private Long id;
     private LocalDate fecha;
     private LocalTime hora;
+    private String observaciones;
+    private String asistencia;
 
     @ManyToOne
     private Estudiante estudiante;
@@ -69,6 +69,22 @@ public class Sesion {
         this.tutor = tutor;
     }
 
+    public String getObservaciones() {
+    return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+    this.observaciones = observaciones;
+    }
+
+    public String getAsistencia() {
+    return asistencia;
+    }
+
+    public void setAsistencia(String asistencia) {
+    this.asistencia = asistencia;
+    }   
+
     public String getFechaFormateada() {
         if (fecha == null) return "Sin fecha";
         return fecha.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -78,14 +94,4 @@ public class Sesion {
         return hora.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
     }
 
-    @Override
-    public String toString() {
-        String fechaStr = (fecha != null) ? new SimpleDateFormat("dd/MM/yyyy").format(fecha) : "Sin fecha";
-        String horaStr = (hora != null) ? hora.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")) : "Sin hora";
-        String estudianteStr = (estudiante != null) ? estudiante.getName() : "Sin estudiante";
-        String tutorStr = (tutor != null) ? tutor.getName() : "Sin tutor";
-        return fechaStr + " - " + horaStr + " - " + estudianteStr + " / " + tutorStr;
-    }
-
-    
 }
